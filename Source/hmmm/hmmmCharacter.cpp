@@ -187,3 +187,21 @@ void AhmmmCharacter::OnRep_CurrentHealth()
 {
 	OnHealthUpdate();
 }
+
+
+void AhmmmCharacter::SetCurrentHealth(float healthValue)
+{
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		CurrentHealth = FMath::Clamp(healthValue, 0.f, MaxHealth);
+		OnHealthUpdate();
+	}
+}
+
+
+float AhmmmCharacter::TakeDamage(float DamageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float damageApplied = CurrentHealth - DamageTaken;
+	SetCurrentHealth(damageApplied);
+	return damageApplied;
+}
